@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>API Test</title></head>
+<body>
+<h1>API Test</h1>
+<button id="register">Register</button>
+<button id="login">Login</button>
+<button id="items">List Items</button>
+<button id="createItem">Create Item</button>
+<pre id="out"></pre>
+
+<script>
+const out = (v) => document.getElementById('out').textContent = JSON.stringify(v, null, 2);
+
+document.getElementById('register').onclick = async () => {
+  const res = await fetch('/users', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({username:'charlie', password:'pw1234', email:'c@example.com'})
+  });
+  out(await res.json());
+};
+
+let TOKEN = '';
+
+document.getElementById('login').onclick = async () => {
+  const res = await fetch('/login', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({username:'charlie', password:'pw1234'})
+  });
+  const j = await res.json();
+  TOKEN = j.token || '';
+  out(j);
+};
+
+document.getElementById('items').onclick = async () => {
+  const res = await fetch('/items');
+  out(await res.json());
+};
+
+document.getElementById('createItem').onclick = async () => {
+  const res = await fetch('/items', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json', 'Authorization':'Bearer '+TOKEN},
+    body: JSON.stringify({title:'Client Item', description:'from html', price:5.00})
+  });
+  out(await res.json());
+};
+</script>
+</body>
+</html>

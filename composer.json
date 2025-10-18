@@ -1,0 +1,17 @@
+{
+    "name": "lando/project1-restapi",
+    "autoload": {
+        "psr-4": {
+            "Lando\\Project1Restapi\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "landonpatton05",
+            "email": "lando4mando@gmail.com"
+        }
+    ],
+    "require": {
+        "vlucas/phpdotenv": "^5.6"
+    }
+}

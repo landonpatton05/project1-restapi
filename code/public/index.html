@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project 1 API Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background-color: #f5f5f5;
+    }
+    h1 {
+      text-align: center;
+    }
+    form {
+      background: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+    input, button {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      font-size: 1em;
+    }
+    pre {
+      background: #222;
+      color: #0f0;
+      padding: 15px;
+      border-radius: 6px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>Project 1 REST API Test</h1>
+
+  <!-- Register Form -->
+  <form id="registerForm">
+    <h2>Register</h2>
+    <input type="text" id="registerUsername" placeholder="Username" required />
+    <input type="password" id="registerPassword" placeholder="Password" required />
+    <button type="submit">Register</button>
+  </form>
+
+  <!-- Login Form -->
+  <form id="loginForm">
+    <h2>Login</h2>
+    <input type="text" id="loginUsername" placeholder="Username" required />
+    <input type="password" id="loginPassword" placeholder="Password" required />
+    <button type="submit">Login</button>
+  </form>
+
+  <!-- Item Creation Form -->
+  <form id="itemForm">
+    <h2>Create Item</h2>
+    <input type="text" id="itemTitle" placeholder="Title" required />
+    <input type="text" id="itemDesc" placeholder="Description" required />
+    <input type="number" id="itemPrice" placeholder="Price" step="0.01" required />
+    <button type="submit">Create Item</button>
+  </form>
+
+  <h2>API Response</h2>
+  <pre id="output"></pre>
+
+  <script>
+    const output = document.getElementById("output");
+    let token = "";
+
+    // Helper to show JSON output nicely
+    function show(data) {
+      output.textContent = JSON.stringify(data, null, 2);
+    }
+
+    // Register new user
+    document.getElementById("registerForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const username = document.getElementById("registerUsername").value;
+      const password = document.getElementById("registerPassword").value;
+
+      const res = await fetch("/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+      });
+      const data = await res.json();
+      show(data);
+    });
+
+    // Login
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const username = document.getElementById("loginUsername").value;
+      const password = document.getElementById("loginPassword").value;
+
+      const res = await fetch("/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+      });
+      const data = await res.json();
+      show(data);
+      if (data.token) token = data.token;
+    });
+
+    // Create item
+    document.getElementById("itemForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!token) return show({ error: "You must login first" });
+
+      const title = document.getElementById("itemTitle").value;
+      const description = document.getElementById("itemDesc").value;
+      const price = document.getElementById("itemPrice").value;
+
+      const res = await fetch("/items", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": token
+        },
+        body: JSON.stringify({ title, description, price })
+      });
+
+      const data = await res.json();
+      show(data);
+    });
+  </script>
+</body>
+</html>
