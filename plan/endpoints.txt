@@ -1,0 +1,10 @@
+POST /login
+POST /users
+GET /users/{id}
+PUT /users/{id}
+GET /items
+GET /items/{id}
+POST /items
+PUT /items/{id}
+DELETE /items/{id}
+GET /search?q=
