@@ -1,0 +1,6 @@
+/vendor/
+/node_modules/
+/.env
+/code/project1.zip
+.idea/
+.vscode/
